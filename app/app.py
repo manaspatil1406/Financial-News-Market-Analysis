@@ -15,6 +15,7 @@ from config import (
     MODEL_PATH, VECTORIZER_PATH, SUMMARY_CSV, TRENDS_CSV, 
     CHART_FILES, MAIN_DATA_CSV, PROJECT_ROOT
 )
+from financial_lexicon import adjust_sentiment, get_sentiment_label as fin_get_sentiment_label
 
 # Setup Logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -78,6 +79,7 @@ def load_trends():
     return pd.read_csv(TRENDS_CSV)
 
 def get_sentiment(score):
+    """Legacy sentiment label function. Used for non-adjusted scores."""
     if score >= 0.05:
         return "Positive"
     elif score <= -0.05:
@@ -354,9 +356,11 @@ elif page == "🔍 Live News Analyzer":
                 # Sector prediction (robust pipeline with preprocessing + keyword boosting)
                 predicted_sector = predict_sector(user_input, model, vectorizer)
 
-                # Sentiment
-                compound = analyzer.polarity_scores(user_input)["compound"]
-                sentiment = get_sentiment(compound)
+                # Hybrid Sentiment: VADER + Financial Lexicon
+                vader_compound = analyzer.polarity_scores(user_input)["compound"]
+                adjusted_score, triggered_keywords, adjustment_delta = adjust_sentiment(user_input, vader_compound)
+                sentiment = fin_get_sentiment_label(adjusted_score)
+                vader_sentiment = get_sentiment(vader_compound)
 
             st.markdown("---")
             st.markdown("### 📋 Analysis Results")
@@ -389,23 +393,25 @@ elif page == "🔍 Live News Analyzer":
                 </div>
                 """, unsafe_allow_html=True)
 
-            # Compound score visualization
-            st.markdown("#### Compound Score")
-            normalized = (compound + 1) / 2  # map -1..1 to 0..1
+            # Compound score visualization — using ADJUSTED score
+            st.markdown("#### 📊 Adjusted Compound Score")
+            normalized = (adjusted_score + 1) / 2  # map -1..1 to 0..1
             st.progress(normalized)
-            st.caption(f"Raw compound score: **{compound:.4f}** (range: -1 to +1)")
+            st.caption(f"Adjusted compound score: **{adjusted_score:.4f}** (range: -1 to +1)")
 
-            # Confidence interpretation
-            if compound > 0.5:
+            # Confidence interpretation — using adjusted score
+            if adjusted_score > 0.5:
                 st.success("🟢 Strong Positive Signal — Very favorable news")
-            elif compound > 0.05:
+            elif adjusted_score > 0.05:
                 st.info("🟡 Mild Positive Signal — Slightly favorable")
-            elif compound > -0.05:
+            elif adjusted_score > -0.05:
                 st.warning("⚪ Neutral Signal — No strong sentiment detected")
-            elif compound > -0.5:
+            elif adjusted_score > -0.5:
                 st.warning("🟠 Mild Negative Signal — Slightly unfavorable")
             else:
                 st.error("🔴 Strong Negative Signal — Very unfavorable news")
+
+
 
 # ============================================================
 # PAGE 3 — MARKET DASHBOARD

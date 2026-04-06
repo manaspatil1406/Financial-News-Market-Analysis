@@ -1,0 +1,17 @@
+==================================================
+   📊 FINANCIAL MARKET INTELLIGENCE REPORT
+==================================================
+Total Articles Analyzed : 48742
+Sectors Covered         : Automobile, Others, IT, Energy, Banking, Pharma
+
+SECTOR TRENDS:
+  Automobile → Stable ➡️    (29.73% Positive)
+  Banking    → Bearish 📉    (29.06% Positive)
+  Energy     → Bearish 📉    (32.77% Positive)
+  IT         → Bearish 📉    (25.9% Positive)
+  Others     → Bearish 📉    (27.67% Positive)
+  Pharma     → Bearish 📉    (22.67% Positive)
+
+KEY INSIGHT:
+  → Banking, Energy, IT, Others, Pharma under pressure
+==================================================

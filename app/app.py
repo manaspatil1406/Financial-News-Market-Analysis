@@ -190,7 +190,7 @@ def predict_sector(text, model, vectorizer):
 # APP CONFIG
 # ============================================================
 st.set_page_config(
-    page_title="Financial News Analysis System",
+    page_title="FinSight Engine",
     page_icon="📊",
     layout="wide",
 )
@@ -294,7 +294,7 @@ with st.sidebar:
             run_pipeline()
             
     st.markdown("---")
-    st.caption("Financial News Analysis System v1.0")
+    st.caption("FinSight Engine v1.0")
 
 # ============================================================
 # PAGE 1 — HOME
@@ -302,7 +302,7 @@ with st.sidebar:
 if page == "🏠 Home":
     st.markdown("""
     <div class="main-header">
-        <h1>📊 Financial News Analysis System</h1>
+        <h1>📊 FinSight Engine</h1>
         <p>AI-powered sector classification and sentiment analysis for financial news</p>
     </div>
     """, unsafe_allow_html=True)

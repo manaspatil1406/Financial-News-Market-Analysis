@@ -1,155 +1,303 @@
-# 📊 Financial News Analysis System (FNAS)
+# FinSight-Engine
+
 
 [![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.50+-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
-[![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-Latest-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-1.2+-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
 
-An end-to-end Machine Learning and Natural Language Processing (NLP) pipeline designed to classify financial news into industry sectors and analyze market sentiment in real-time.
+An end-to-end Machine Learning and NLP pipeline that classifies financial news into industry sectors and analyzes market sentiment in real-time.
 
 ---
 
 ## 🌟 Project Highlights
 
-*   **🏢 Multi-Sector Classification:** Automatically categorizes news into **Banking, IT, Pharma, Energy, Automobile, and Financial Services**.
-*   **😊 Sentiment Intelligence:** Leverages VADER for deep sentiment analysis (Positive, Negative, Neutral).
-*   **📈 Market Trend Detection:** Synthesizes raw data into **Bullish, Bearish, and Stable** trend labels.
-*   **🗺️ Interactive Dashboard:** Professional visualizations and a consolidated "Market Intelligence Dashboard."
-*   **🔍 Live News Analyzer:** Real-time interface for instant sector and sentiment prediction of custom headlines.
+- **🏢 Multi-Sector Classification** — Banking, IT, Pharma, Energy, Automobile, Financial Services
+- **😊 Sentiment Intelligence** — Hybrid VADER + Financial Lexicon analysis (Positive / Negative / Neutral)
+- **📈 Market Trend Detection** — Bullish, Bearish, and Stable trend labels per sector
+- **🗺️ Interactive Dashboard** — 8 professional charts and a consolidated Market Intelligence view
+- **🔍 Live News Analyzer** — Real-time sector + sentiment prediction for any custom headline
+- **🔴 Live Feed** — Real-time news from NewsAPI with Yahoo Finance RSS fallback
 
 ---
 
-## 🚀 System Architecture & Progress
+## 🚀 System Architecture
 
-The project was developed in 9 distinct phases:
-
-1.  **✅ Phase 1: Data Collection:** Ingested the raw financial news dataset.
-2.  **✅ Phase 2: Data Cleaning:** Handled null values, duplicates, and initial formatting.
-3.  **✅ Phase 3: Preprocessing:** Implemented tokenization, lemmatization, and stopword removal.
-4.  **✅ Phase 4: Feature Engineering:** Transformed text into numerical vectors using **TF-IDF**.
-5.  **✅ Phase 5: Sector Classification:** Trained and compared **Logistic Regression** and **Naive Bayes** models (Accuracy ~85%).
-6.  **✅ Phase 6: Sentiment Analysis:** Integrated **VADER** for compound sentiment scoring.
-7.  **✅ Phase 7: Aggregation:** Combined sector and sentiment data to generate final market insights.
-8.  **✅ Phase 8: Visualization:** Created 8 professional charts and a **Master Dashboard**.
-9.  **✅ Phase 9: Streamlit UI:** Built a multi-page web application for user interaction.
-
----
-
-## 📊 Dashboard Preview
-
-![Master Dashboard](dashboard_master.png)
-
----
-
-## 🛠️ Technologies Used
-
-*   **Core:** Python, Pandas, NumPy
-*   **NLP:** NLTK, spaCy, VADER Sentiment Analyzer
-*   **Machine Learning:** scikit-learn (TF-IDF, Logistic Regression, Naive Bayes)
-*   **Visualization:** Matplotlib, Seaborn
-*   **User Interface:** Streamlit, Pillow
-*   **Deployment Tools:** joblib (Model serialization)
+```
+Raw JSON Data
+    │
+    ▼
+Phase 1: Data Collection      → data/raw/*.json
+    │
+    ▼
+Phase 2–3: Cleaning & Preprocessing → data/processed/preprocessed_finance_news.csv
+    │
+    ▼
+Phase 4–5: TF-IDF + Sector Classification (Logistic Regression / Naive Bayes)
+    │                                      → models/final_sector_model.pkl
+    │                                      → models/tfidf_vectorizer.pkl
+    ▼
+Phase 6: Sentiment Analysis (VADER + Financial Lexicon)
+    │                         → data/outputs/financial_news_with_sentiment.csv
+    ▼
+Phase 7: Aggregation          → data/outputs/market_trends.csv
+    │                         → data/outputs/sector_sentiment_summary.csv
+    ▼
+Phase 8: Visualization        → reports/charts/*.png
+    │
+    ▼
+Phase 9: Streamlit UI         → streamlit run app/app.py
+```
 
 ---
 
 ## 📂 Project Structure
 
-```bash
-Financial-News-Market-Analysis/
-Financial-News-Market-Analysis/
+```
+FinSight-Engine/
+│
+├── app/
+│   └── app.py                        # Streamlit multi-page app (entry point)
 │
 ├── data/
-│   ├── raw/                          # Original datasets (no changes)
-│   ├── processed/                    # Cleaned + transformed data
+│   ├── raw/                          # Original JSON datasets (do not modify)
+│   ├── processed/
 │   │   ├── finance_sector_dataset.csv
 │   │   └── preprocessed_finance_news.csv
-│   └── outputs/                      # Generated datasets
+│   └── outputs/                      # Auto-generated by pipeline scripts
 │       ├── financial_news_with_sentiment.csv
 │       ├── market_trends.csv
 │       ├── sector_sentiment_summary.csv
 │       ├── top_headlines_per_sector.csv
-│       └── year_wise_sentiment.csv
+│       ├── year_wise_sentiment.csv
+│       ├── live_news_results.csv
+│       └── live_news_cache.csv
 │
-├── models/                           # Saved ML models
+├── models/                           # Saved ML models (auto-generated)
 │   ├── final_sector_model.pkl
-│   ├── sector_classifier_nb.pkl
 │   └── tfidf_vectorizer.pkl
 │
-├── notebooks/                        # Jupyter notebooks (experiments)
+├── notebooks/                        # Jupyter notebooks (experiments / reference)
 │   ├── data_collection.ipynb
 │   ├── sentiment_analysis.ipynb
 │   ├── sector_classification_model.ipynb
 │   └── final_market_dashboard.ipynb
 │
-├── src/                              # Core source code (production logic)
+├── src/                              # Core source modules
 │   ├── __init__.py
-│   ├── preprocessing.py
-│   ├── sentiment_analysis.py
-│   ├── sector_classification.py
-│   ├── aggregation.py
-│   └── visualization/
-│       └── dashboard.py
+│   ├── config.py                     # Centralised path configuration
+│   ├── preprocessing.py              # Text cleaning (NLTK + spaCy)
+│   ├── sentiment_analysis.py         # VADER + financial lexicon pipeline
+│   ├── sector_classification.py      # Model training script
+│   ├── aggregation.py                # Sector/trend aggregation
+│   ├── financial_lexicon.py          # Domain keyword dictionaries
+│   ├── live_analyzer.py              # Live news analysis engine
+│   ├── news_fetcher.py               # NewsAPI + RSS fetcher
+│   └── visualisation/
+│       └── dashboard.py              # Chart generation
 │
-├── reports/                          # Outputs for evaluation/demo
-│   ├── charts/
-│   │   ├── chart1_overall_sentiment_pie.png
-│   │   ├── chart2_sector_sentiment_bar.png
-│   │   ├── chart3_market_trends_horizontal.png
-│   │   ├── chart4_compound_boxplot.png
-│   │   ├── chart5_yearwise_trend_line.png
-│   │   ├── chart6_stacked_bar_count.png
-│   │   ├── chart7_heatmap_sector_sentiment.png
-│   │   ├── chart8_top_headlines_table.png
-│   │   └── dashboard_master.png
-│   │
-│   ├── logs/
-│   │   ├── aggregation_report.txt
-│   │   ├── sentiment_analysis_output.txt
-│   │   ├── sector_classification_output.txt
-│   │   └── sector_classification_output_utf8.txt
-│   │
-│   └── results/
-│       ├── sector_classification_results.png
-│       ├── sector_sentiment.png
-│       └── sentiment_distribution.png
+├── reports/
+│   ├── charts/                       # All generated PNG charts
+│   └── logs/                         # Pipeline run logs
 │
-├── app/                              # App / dashboard entry
-│   └── app.py
-│
-├── config/                           # Config files (future scaling)
-│   └── config.yaml
-│
-├── tests/                            # (Optional but strong for resume)
+├── tests/
 │   └── test_pipeline.py
+│
+├── config/
+│   └── config.yaml
 │
 ├── .gitignore
 ├── README.md
 └── requirements.txt
+```
 
 ---
 
-## 📦 Installation & Usage
+## 📦 Installation & Setup
 
-### 1. Clone the repository
+> **Prerequisites:** Python 3.8 or higher, pip
+
+### Step 1 — Clone the Repository
+
 ```bash
-git clone https://github.com/manaspatil1406/Financial-News-Market-Analysis.git
-cd Financial-News-Market-Analysis
+git clone https://github.com/manaspatil1406/FinSight-Engine.git
+cd FinSight-Engine
 ```
 
-### 2. Install Dependencies
+### Step 2 — Create a Virtual Environment (Recommended)
+
+```bash
+# Windows
+python -m venv venv
+venv\Scripts\activate
+
+# macOS / Linux
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### Step 3 — Install Python Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Run the Streamlit App
+### Step 4 — Download NLTK Data
+
 ```bash
-streamlit run app.py
+python -m nltk.downloader stopwords punkt punkt_tab
+```
+
+### Step 5 — Download spaCy Language Model
+
+```bash
+python -m spacy download en_core_web_sm
+```
+
+### Step 6 — (Optional) Set Your NewsAPI Key
+
+The Live Feed page uses [NewsAPI](https://newsapi.org/) for fresh articles. Without a key it automatically falls back to Yahoo Finance RSS feeds.
+
+```bash
+# Windows (Command Prompt)
+set NEWS_API_KEY=your_actual_key_here
+
+# Windows (PowerShell)
+$env:NEWS_API_KEY="your_actual_key_here"
+
+# macOS / Linux
+export NEWS_API_KEY=your_actual_key_here
 ```
 
 ---
 
-## ℹ️ About the Project
+## 🔄 Running the Full Pipeline (First Time)
 
-Developed as a comprehensive solution for financial market surveillance, this tool helps investors and analysts quickly grasp market sentiment and trends across various sectors using data-driven insights.
+You must run these scripts **in order** before launching the app for the first time.
 
-**Author:** Rajesh Patil  
-**Version:** 1.0.0
+### Step 1 — Fix the hardcoded path in `src/sector_classification.py`
+
+Open `src/sector_classification.py` and replace the top of the file where `PROJECT_DIR` is set:
+
+**Find this line (around line 17):**
+```python
+PROJECT_DIR = r"c:\Users\Rajesh Patil\FinSight-Engine"
+```
+
+**Replace it with:**
+```python
+import os as _os
+PROJECT_DIR = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+```
+
+> ⚠️ This is a known bug — the original file has a hardcoded Windows path that will crash on any other machine or user account.
+
+### Step 2 — Train the Sector Classification Model
+
+```bash
+python src/sector_classification.py
+```
+
+This reads `data/processed/preprocessed_finance_news.csv`, trains and evaluates two models (Logistic Regression and Naive Bayes), and saves the best one to `models/`.
+
+### Step 3 — Run Sentiment Analysis
+
+```bash
+python src/sentiment_analysis.py
+```
+
+This generates `data/outputs/financial_news_with_sentiment.csv`.
+
+### Step 4 — Run Aggregation
+
+```bash
+python src/aggregation.py
+```
+
+This generates the summary CSVs in `data/outputs/`.
+
+### Step 5 — Generate Charts
+
+```bash
+python src/visualisation/dashboard.py
+```
+
+This generates all 8 charts plus the master dashboard in `reports/charts/`.
+
+---
+
+## ▶️ Launch the App
+
+```bash
+# Run from the PROJECT ROOT directory, not from inside app/
+streamlit run app/app.py
+```
+
+> ⚠️ **Important:** Always run from the project root (`FinSight-Engine/`), not from inside the `app/` folder. The path resolution depends on this.
+
+---
+
+## 🛠️ Technologies Used
+
+| Category | Libraries |
+|---|---|
+| Core | Python 3.8+, Pandas, NumPy |
+| NLP | NLTK (stopwords, punkt), spaCy (en_core_web_sm) |
+| Sentiment | VADER (vaderSentiment), Custom Financial Lexicon |
+| ML | scikit-learn — TF-IDF, Logistic Regression, Naive Bayes |
+| Visualization | Matplotlib, Seaborn |
+| UI | Streamlit, Pillow |
+| News APIs | newsapi-python, feedparser, requests |
+| Serialization | joblib |
+
+---
+
+## 🐛 Known Issues & Fixes
+
+### 1. `ModuleNotFoundError: No module named 'feedparser'`
+**Cause:** `feedparser` was missing from the original `requirements.txt`.
+**Fix:** It is now included. Run `pip install -r requirements.txt` again.
+
+### 2. `FileNotFoundError` on model files
+**Cause:** Models haven't been trained yet.
+**Fix:** Run `python src/sector_classification.py` first.
+
+### 3. `FileNotFoundError` on CSV files in `data/outputs/`
+**Cause:** Pipeline scripts haven't been run yet.
+**Fix:** Follow the "Running the Full Pipeline" steps above in order.
+
+### 4. `OSError` or `PermissionError` with path on Windows
+**Cause:** The hardcoded path `c:\Users\Rajesh Patil\...` in `src/sector_classification.py`.
+**Fix:** Replace `PROJECT_DIR` as shown in Step 1 of the pipeline section above.
+
+### 5. `LookupError: Resource stopwords not found`
+**Fix:** Run `python -m nltk.downloader stopwords punkt punkt_tab`
+
+### 6. `OSError: [E050] Can't find model 'en_core_web_sm'`
+**Fix:** Run `python -m spacy download en_core_web_sm`
+
+### 7. `streamlit run app.py` gives import errors
+**Cause:** Running from inside the `app/` folder breaks relative path resolution.
+**Fix:** Always run `streamlit run app/app.py` from the **project root**.
+
+### 8. Live Feed shows "No news found"
+**Cause:** No NewsAPI key is set. RSS fallback may return limited results.
+**Fix:** Register at [newsapi.org](https://newsapi.org) (free tier available) and set `NEWS_API_KEY`.
+
+---
+
+## 📊 Model Performance
+
+| Model | Accuracy |
+|---|---|
+| Logistic Regression | ~85% |
+| Naive Bayes | ~82% |
+
+Trained on ~26,000 balanced samples across 5 sectors (Others category excluded). Class imbalance handled via oversampling.
+
+---
+
+## 📈 Dashboard Preview
+
+The master dashboard (`reports/charts/dashboard_master.png`) is generated automatically by running `python src/visualisation/dashboard.py`.
+
+---

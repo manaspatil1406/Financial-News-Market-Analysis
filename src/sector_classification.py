@@ -11,12 +11,21 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from sklearn.utils import resample  # type: ignore
 import joblib  # type: ignore
 import os
+import sys
 
-# Set paths
-PROJECT_DIR = r"c:\Users\Rajesh Patil\Financial-News-Market-Analysis"
-DATA_PATH = os.path.join(PROJECT_DIR, "data", "processed", "preprocessed_finance_news.csv")
-MODELS_DIR = os.path.join(PROJECT_DIR, "models")
+# ============================================================
+# FIX: Use dynamic path resolution instead of a hardcoded path.
+# This file lives in src/, so the project root is one level up.
+# ============================================================
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Add src/ to path so config can be imported
+sys.path.append(os.path.join(PROJECT_DIR, "src"))
+from config import PROCESSED_DATA_DIR, MODELS_DIR, REPORTS_DIR, CHARTS_DIR
+
+DATA_PATH = os.path.join(PROCESSED_DATA_DIR, "preprocessed_finance_news.csv")
 os.makedirs(MODELS_DIR, exist_ok=True)
+os.makedirs(CHARTS_DIR, exist_ok=True)
 
 # ============================================================
 # KEYWORD-BASED SECTOR RULES (for boosting noisy predictions)
@@ -60,14 +69,12 @@ SECTOR_KEYWORDS = {
 def preprocess_text(text):
     """
     Clean text for inference — matches the preprocessing used during training.
-    Ensures consistency between training clean_text and live input.
     """
     if not isinstance(text, str):
         return ""
     text = text.lower()
-    text = re.sub(r"[^a-z\s]", "", text)  # remove punctuation & numbers
+    text = re.sub(r"[^a-z\s]", "", text)
     tokens = text.split()
-    # Remove very short tokens (matches training preprocessing)
     tokens = [t for t in tokens if len(t) > 2]
     return " ".join(tokens)
 
@@ -75,7 +82,7 @@ def preprocess_text(text):
 def keyword_sector_match(text):
     """
     Check if the input text contains strong keyword signals for a sector.
-    Returns (sector_name, confidence) or (None, 0).
+    Returns (sector_name, confidence_count) or (None, 0).
     """
     text_lower = text.lower()
     scores = {}
@@ -97,33 +104,16 @@ def predict_sector(text, model, vectorizer, debug=False):
       2. Transform using trained TF-IDF vectorizer
       3. Get model prediction
       4. Apply keyword boosting if model confidence is low
-
-    Parameters
-    ----------
-    text : str — raw input text
-    model : trained classifier
-    vectorizer : trained TfidfVectorizer
-    debug : bool — if True, prints diagnostic info
-
-    Returns
-    -------
-    str : predicted sector name
     """
-    # Step 1: Preprocess
     cleaned = preprocess_text(text)
     if debug:
         print(f"  [DEBUG] Input text   : {text[:80]}...")
         print(f"  [DEBUG] Cleaned text : {cleaned[:80]}...")
 
-    # Step 2: TF-IDF transform (NOT fit_transform!)
     text_tfidf = vectorizer.transform([cleaned])
-    if debug:
-        print(f"  [DEBUG] TF-IDF shape : {text_tfidf.shape}")
 
-    # Step 3: Model prediction + confidence
     model_pred = model.predict(text_tfidf)[0]
 
-    # Get prediction probabilities if available
     if hasattr(model, "predict_proba"):
         proba = model.predict_proba(text_tfidf)[0]
         max_confidence = proba.max()
@@ -133,17 +123,14 @@ def predict_sector(text, model, vectorizer, debug=False):
     else:
         max_confidence = 1.0
 
-    # Step 4: Keyword boosting — override if model is uncertain
     kw_sector, kw_score = keyword_sector_match(text)
     if debug:
         print(f"  [DEBUG] Model pred   : {model_pred} (conf={max_confidence:.3f})")
         print(f"  [DEBUG] Keyword match: {kw_sector} (score={kw_score})")
 
-    # Use keyword result if model confidence is low OR keyword signal is strong
     if kw_sector and (max_confidence < 0.45 or kw_score >= 2):
         final_pred = kw_sector
     elif kw_sector and model_pred != kw_sector and kw_score >= 1:
-        # Keyword disagrees with model — trust keyword for domain-specific terms
         final_pred = kw_sector
     else:
         final_pred = model_pred
@@ -158,18 +145,24 @@ def main():
     print("=" * 60)
     print("SECTOR CLASSIFICATION — Training Pipeline")
     print("=" * 60)
+    print(f"Project root : {PROJECT_DIR}")
+    print(f"Data path    : {DATA_PATH}")
 
     # ── Load Data ───────────────────────────────────────────────
     print("\nLoading data...")
+    if not os.path.exists(DATA_PATH):
+        print(f"ERROR: Data file not found at: {DATA_PATH}")
+        print("Please run the data collection and preprocessing steps first.")
+        sys.exit(1)
+
     df = pd.read_csv(DATA_PATH)
     df.dropna(subset=["clean_text", "sector"], inplace=True)
 
-    # Step 1: Remove the Others Category
     print(f"Original shape: {df.shape}")
     df = df[df["sector"] != "Others"]
     print(f"Shape after removing 'Others': {df.shape}")
 
-    # Step 2: Handle Class Imbalance via OVERSAMPLING
+    # ── Handle Class Imbalance via Oversampling ──────────────────
     print("\nClass distribution BEFORE balancing:")
     print(df["sector"].value_counts())
 
@@ -228,10 +221,10 @@ def main():
 
     # ── Select Best ─────────────────────────────────────────────
     print("\n--- Model Comparison ---")
-    print(f"| Model               | Accuracy |")
-    print(f"|---------------------|----------|")
-    print(f"| Naive Bayes         | {nb_acc*100:.2f}%   |")
-    print(f"| Logistic Regression | {lr_acc*100:.2f}%   |")
+    print(f"| {'Model':<22} | Accuracy |")
+    print(f"|{'-'*24}|----------|")
+    print(f"| {'Naive Bayes':<22} | {nb_acc*100:.2f}%   |")
+    print(f"| {'Logistic Regression':<22} | {lr_acc*100:.2f}%   |")
 
     if lr_acc > nb_acc:
         best_model = lr_model
@@ -242,7 +235,7 @@ def main():
         best_name = "Naive Bayes"
         best_pred = nb_pred
 
-    print(f"-> Best Model: {best_name} — Saved!")
+    print(f"\n-> Best Model: {best_name} — Saving...")
 
     # ── Confusion Matrix ────────────────────────────────────────
     cm = confusion_matrix(y_test, best_pred)
@@ -256,13 +249,18 @@ def main():
     plt.ylabel("Actual")
     plt.xlabel("Predicted")
     plt.tight_layout()
-    plt.savefig(os.path.join(PROJECT_DIR, "reports", "charts", "confusion_matrix.png"))
-    print("Saved confusion matrix chart.")
+    cm_path = os.path.join(CHARTS_DIR, "confusion_matrix.png")
+    plt.savefig(cm_path)
+    plt.close()
+    print(f"Saved confusion matrix: {cm_path}")
 
     # ── Save Models ─────────────────────────────────────────────
-    joblib.dump(best_model, os.path.join(MODELS_DIR, "final_sector_model.pkl"))
-    joblib.dump(vectorizer, os.path.join(MODELS_DIR, "tfidf_vectorizer.pkl"))
-    print("Saved models to models/ folder.")
+    model_out = os.path.join(MODELS_DIR, "final_sector_model.pkl")
+    vec_out   = os.path.join(MODELS_DIR, "tfidf_vectorizer.pkl")
+    joblib.dump(best_model, model_out)
+    joblib.dump(vectorizer, vec_out)
+    print(f"Saved model      : {model_out}")
+    print(f"Saved vectorizer : {vec_out}")
 
     # ── Test Custom Headlines ───────────────────────────────────
     print("\n--- Testing Custom Headlines (with keyword boosting) ---")
@@ -279,11 +277,11 @@ def main():
 
     correct = 0
     for text, expected in custom_headlines:
-        pred = predict_sector(text, best_model, vectorizer, debug=True)
-        match = "OK" if pred == expected else "!!"
+        pred = predict_sector(text, best_model, vectorizer, debug=False)
+        match = "✓" if pred == expected else "✗"
         if pred == expected:
             correct += 1
-        print(f'  [{match}] "{text}" -> {pred} (expected: {expected})\n')
+        print(f"  [{match}] \"{text}\" → {pred} (expected: {expected})")
 
     print(f"\nCustom headline accuracy: {correct}/{len(custom_headlines)}")
 

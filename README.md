@@ -1,104 +1,53 @@
 # Financial News Analysis System (FNAS)
 
+# 📊 Financial News Analysis System (FNAS)
+
 [![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
 [![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-1.2+-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
 
-An end-to-end Machine Learning and Natural Language Processing (NLP) pipeline for classifying financial news into industry sectors and analyzing market sentiment in real time.
+An end-to-end **Machine Learning + NLP pipeline** for classifying financial news into industry sectors and analyzing market sentiment in real time.
 
 ---
 
-## Project Highlights
+## 🚀 Project Highlights
 
-- Multi-sector classification across Banking, IT, Pharma, Energy, Automobile, and Others.
-- Hybrid sentiment analysis using VADER plus a financial keyword lexicon.
-- Market trend detection with Bullish, Bearish, and Stable labels.
-- Interactive Streamlit dashboard with historical charts and live analysis.
-- Live feed support using NewsAPI with Yahoo Finance RSS fallback.
+- Multi-sector classification: Banking, IT, Pharma, Energy, Automobile, Others  
+- Hybrid sentiment analysis using **VADER + financial lexicon**  
+- Market trend detection: **Bullish, Bearish, Stable**  
+- Interactive **Streamlit dashboard**  
+- Live news integration via **NewsAPI + Yahoo Finance RSS fallback**
 
 ---
 
-## System Workflow
+## 🧠 System Workflow
 
 ```text
 Raw Financial News Data
-        |
-        v
-Data Cleaning and Preprocessing
-        |
-        v
+        ↓
+Data Cleaning & Preprocessing
+        ↓
 TF-IDF Feature Extraction
-        |
-        v
+        ↓
 Model Training (Logistic Regression / Naive Bayes)
-        |
-        v
+        ↓
 Sector Prediction
-        |
-        v
+        ↓
 Sentiment Analysis (VADER + Financial Lexicon)
-        |
-        v
-Aggregation and Trend Detection
-        |
-        v
-Visualization and Dashboard
-```
+        ↓
+Aggregation & Trend Detection
+        ↓
+Visualization (Dashboard)
 
----
-
-## Project Structure
-
-```text
 Financial-News-Market-Analysis/
-|
-|-- app/
-|   `-- app.py
-|
-|-- data/
-|   |-- raw/
-|   |-- processed/
-|   |   |-- finance_sector_dataset.csv
-|   |   `-- preprocessed_finance_news.csv
-|   `-- outputs/
-|       |-- financial_news_with_sentiment.csv
-|       |-- market_trends.csv
-|       |-- sector_sentiment_summary.csv
-|       |-- top_headlines_per_sector.csv
-|       |-- year_wise_sentiment.csv
-|       |-- live_news_results.csv
-|       `-- live_news_cache.csv
-|
-|-- models/
-|   |-- final_sector_model.pkl
-|   `-- tfidf_vectorizer.pkl
-|
-|-- notebooks/
-|   |-- data_collection.ipynb
-|   |-- sentiment_analysis.ipynb
-|   |-- sector_classification_model.ipynb
-|   `-- final_market_dashboard.ipynb
-|
-|-- reports/
-|   |-- charts/
-|   `-- logs/
-|
-|-- src/
-|   |-- aggregation.py
-|   |-- config.py
-|   |-- financial_lexicon.py
-|   |-- live_analyzer.py
-|   |-- news_fetcher.py
-|   |-- preprocessing.py
-|   |-- sector_classification.py
-|   |-- sentiment_analysis.py
-|   `-- visualisation/
-|       `-- dashboard.py
-|
-|-- .gitignore
-|-- README.md
-`-- requirements.txt
-```
+├── app/
+├── data/
+├── models/
+├── notebooks/
+├── reports/
+├── src/
+├── README.md
+└── requirements.txt
 
 ---
 

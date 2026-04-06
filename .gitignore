@@ -6,6 +6,5 @@ data/raw/
 data/processed/
 models/
 .ipynb_checkpoints/
-*.txt
 *.png
 *.csv

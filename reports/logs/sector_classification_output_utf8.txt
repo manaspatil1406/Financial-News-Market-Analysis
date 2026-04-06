@@ -1,0 +1,65 @@
+﻿Loading data...
+Original shape: (48738, 10)
+Shape after removing 'Others': (26045, 10)
+
+Class distribution after removal:
+sector
+IT            16132
+Automobile     7468
+Energy         1178
+Banking         795
+Pharma          472
+Name: count, dtype: int64
+
+Extracting TF-IDF features...
+
+Training Logistic Regression...
+
+Training Naive Bayes...
+
+--- Model Evaluation ---
+Logistic Regression Accuracy: 0.8138
+Logistic Regression Classification Report:
+              precision    recall  f1-score   support
+
+  Automobile       0.69      0.87      0.77      1535
+     Banking       0.93      0.89      0.91       157
+      Energy       0.70      0.86      0.77       239
+          IT       0.92      0.78      0.84      3196
+      Pharma       0.57      0.90      0.70        82
+
+    accuracy                           0.81      5209
+   macro avg       0.76      0.86      0.80      5209
+weighted avg       0.84      0.81      0.82      5209
+
+Naive Bayes Accuracy: 0.6978
+Naive Bayes Classification Report:
+              precision    recall  f1-score   support
+
+  Automobile       0.77      0.33      0.46      1535
+     Banking       0.93      0.24      0.38       157
+      Energy       0.77      0.08      0.15       239
+          IT       0.68      0.96      0.80      3196
+      Pharma       0.00      0.00      0.00        82
+
+    accuracy                           0.70      5209
+   macro avg       0.63      0.32      0.36      5209
+weighted avg       0.71      0.70      0.64      5209
+
+
+--- Model Comparison ---
+| Model               | Accuracy |
+|---------------------|----------|
+| Naive Bayes         | 69.78%   |
+| Logistic Regression | 81.38%   |
+-> Select the better model: Logistic Regression
+[OK] Best Model: Logistic Regression -> Saved!
+Saved confusion matrix to phase5_results.png
+Saved models to models/ folder.
+
+--- Testing Custom Headlines ---
+"Infosys launches new AI platform" 	-> Predicted: Automobile
+"RBI cuts interest rates" 	-> Predicted: Automobile
+"Oil prices crash causing losses" 	-> Predicted: Energy
+"Tesla reports strong sales growth" 	-> Predicted: Automobile
+"Sun Pharma gets FDA approval" 	-> Predicted: Pharma

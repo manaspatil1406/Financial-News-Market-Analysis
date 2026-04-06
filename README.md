@@ -1,152 +1,196 @@
-# 📊 Financial News Analysis System (FNAS)
+# Financial News Analysis System (FNAS)
 
 [![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.50+-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
-[![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-Latest-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-1.2+-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
 
-An end-to-end Machine Learning and Natural Language Processing (NLP) pipeline designed to classify financial news into industry sectors and analyze market sentiment in real-time.
-
----
-
-## 🌟 Project Highlights
-
-*   **🏢 Multi-Sector Classification:** Automatically categorizes news into **Banking, IT, Pharma, Energy, Automobile, and Financial Services**.
-*   **😊 Sentiment Intelligence:** Leverages VADER for deep sentiment analysis (Positive, Negative, Neutral).
-*   **📈 Market Trend Detection:** Synthesizes raw data into **Bullish, Bearish, and Stable** trend labels.
-*   **🗺️ Interactive Dashboard:** Professional visualizations and a consolidated "Market Intelligence Dashboard."
-*   **🔍 Live News Analyzer:** Real-time interface for instant sector and sentiment prediction of custom headlines.
+An end-to-end Machine Learning and Natural Language Processing (NLP) pipeline for classifying financial news into industry sectors and analyzing market sentiment in real time.
 
 ---
 
-## 🚀 System Architecture & Progress
+## Project Highlights
 
-The project was developed in 9 distinct phases:
-
-1.  **✅ Phase 1: Data Collection:** Ingested the raw financial news dataset.
-2.  **✅ Phase 2: Data Cleaning:** Handled null values, duplicates, and initial formatting.
-3.  **✅ Phase 3: Preprocessing:** Implemented tokenization, lemmatization, and stopword removal.
-4.  **✅ Phase 4: Feature Engineering:** Transformed text into numerical vectors using **TF-IDF**.
-5.  **✅ Phase 5: Sector Classification:** Trained and compared **Logistic Regression** and **Naive Bayes** models (Accuracy ~85%).
-6.  **✅ Phase 6: Sentiment Analysis:** Integrated **VADER** for compound sentiment scoring.
-7.  **✅ Phase 7: Aggregation:** Combined sector and sentiment data to generate final market insights.
-8.  **✅ Phase 8: Visualization:** Created 8 professional charts and a **Master Dashboard**.
-9.  **✅ Phase 9: Streamlit UI:** Built a multi-page web application for user interaction.
+- Multi-sector classification across Banking, IT, Pharma, Energy, Automobile, and Others.
+- Hybrid sentiment analysis using VADER plus a financial keyword lexicon.
+- Market trend detection with Bullish, Bearish, and Stable labels.
+- Interactive Streamlit dashboard with historical charts and live analysis.
+- Live feed support using NewsAPI with Yahoo Finance RSS fallback.
 
 ---
 
-## 📊 Dashboard Preview
+## System Workflow
 
-![Master Dashboard](dashboard_master.png)
+```text
+Raw Financial News Data
+        |
+        v
+Data Cleaning and Preprocessing
+        |
+        v
+TF-IDF Feature Extraction
+        |
+        v
+Model Training (Logistic Regression / Naive Bayes)
+        |
+        v
+Sector Prediction
+        |
+        v
+Sentiment Analysis (VADER + Financial Lexicon)
+        |
+        v
+Aggregation and Trend Detection
+        |
+        v
+Visualization and Dashboard
+```
 
 ---
 
-## 🛠️ Technologies Used
+## Project Structure
 
-*   **Core:** Python, Pandas, NumPy
-*   **NLP:** NLTK, spaCy, VADER Sentiment Analyzer
-*   **Machine Learning:** scikit-learn (TF-IDF, Logistic Regression, Naive Bayes)
-*   **Visualization:** Matplotlib, Seaborn
-*   **User Interface:** Streamlit, Pillow
-*   **Deployment Tools:** joblib (Model serialization)
-
----
-
-## 📂 Project Structure
-
-```bash
+```text
 Financial-News-Market-Analysis/
-Financial-News-Market-Analysis/
-│
-├── data/
-│   ├── raw/                          # Original datasets (no changes)
-│   ├── processed/                    # Cleaned + transformed data
-│   │   ├── finance_sector_dataset.csv
-│   │   └── preprocessed_finance_news.csv
-│   └── outputs/                      # Generated datasets
-│       ├── financial_news_with_sentiment.csv
-│       ├── market_trends.csv
-│       ├── sector_sentiment_summary.csv
-│       ├── top_headlines_per_sector.csv
-│       └── year_wise_sentiment.csv
-│
-├── models/                           # Saved ML models
-│   ├── final_sector_model.pkl
-│   ├── sector_classifier_nb.pkl
-│   └── tfidf_vectorizer.pkl
-│
-├── notebooks/                        # Jupyter notebooks (experiments)
-│   ├── data_collection.ipynb
-│   ├── sentiment_analysis.ipynb
-│   ├── sector_classification_model.ipynb
-│   └── final_market_dashboard.ipynb
-│
-├── src/                              # Core source code (production logic)
-│   ├── __init__.py
-│   ├── preprocessing.py
-│   ├── sentiment_analysis.py
-│   ├── sector_classification.py
-│   ├── aggregation.py
-│   └── visualization/
-│       └── dashboard.py
-│
-├── reports/                          # Outputs for evaluation/demo
-│   ├── charts/
-│   │   ├── chart1_overall_sentiment_pie.png
-│   │   ├── chart2_sector_sentiment_bar.png
-│   │   ├── chart3_market_trends_horizontal.png
-│   │   ├── chart4_compound_boxplot.png
-│   │   ├── chart5_yearwise_trend_line.png
-│   │   ├── chart6_stacked_bar_count.png
-│   │   ├── chart7_heatmap_sector_sentiment.png
-│   │   ├── chart8_top_headlines_table.png
-│   │   └── dashboard_master.png
-│   │
-│   ├── logs/
-│   │   ├── aggregation_report.txt
-│   │   ├── sentiment_analysis_output.txt
-│   │   ├── sector_classification_output.txt
-│   │   └── sector_classification_output_utf8.txt
-│   │
-│   └── results/
-│       ├── sector_classification_results.png
-│       ├── sector_sentiment.png
-│       └── sentiment_distribution.png
-│
-├── app/                              # App / dashboard entry
-│   └── app.py
-│
-├── config/                           # Config files (future scaling)
-│   └── config.yaml
-│
-├── tests/                            # (Optional but strong for resume)
-│   └── test_pipeline.py
-│
-├── .gitignore
-├── README.md
-└── requirements.txt
+|
+|-- app/
+|   `-- app.py
+|
+|-- data/
+|   |-- raw/
+|   |-- processed/
+|   |   |-- finance_sector_dataset.csv
+|   |   `-- preprocessed_finance_news.csv
+|   `-- outputs/
+|       |-- financial_news_with_sentiment.csv
+|       |-- market_trends.csv
+|       |-- sector_sentiment_summary.csv
+|       |-- top_headlines_per_sector.csv
+|       |-- year_wise_sentiment.csv
+|       |-- live_news_results.csv
+|       `-- live_news_cache.csv
+|
+|-- models/
+|   |-- final_sector_model.pkl
+|   `-- tfidf_vectorizer.pkl
+|
+|-- notebooks/
+|   |-- data_collection.ipynb
+|   |-- sentiment_analysis.ipynb
+|   |-- sector_classification_model.ipynb
+|   `-- final_market_dashboard.ipynb
+|
+|-- reports/
+|   |-- charts/
+|   `-- logs/
+|
+|-- src/
+|   |-- aggregation.py
+|   |-- config.py
+|   |-- financial_lexicon.py
+|   |-- live_analyzer.py
+|   |-- news_fetcher.py
+|   |-- preprocessing.py
+|   |-- sector_classification.py
+|   |-- sentiment_analysis.py
+|   `-- visualisation/
+|       `-- dashboard.py
+|
+|-- .gitignore
+|-- README.md
+`-- requirements.txt
+```
 
 ---
 
-## 📦 Installation & Usage
+## Installation
 
 ### 1. Clone the repository
+
 ```bash
 git clone https://github.com/manaspatil1406/Financial-News-Market-Analysis.git
 cd Financial-News-Market-Analysis
 ```
 
-### 2. Install Dependencies
+### 2. Create a virtual environment
+
+```bash
+# Windows
+python -m venv venv
+venv\Scripts\activate
+
+# macOS / Linux
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 3. Install dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Run the Streamlit App
+### 4. Download NLTK and spaCy resources
+
 ```bash
-streamlit run app.py
+python -m nltk.downloader stopwords punkt punkt_tab
+python -m spacy download en_core_web_sm
+```
+
+### 5. Optional: set a NewsAPI key
+
+Without a key, the app falls back to Yahoo Finance RSS feeds.
+
+```bash
+# Windows PowerShell
+$env:NEWS_API_KEY="your_actual_key_here"
+
+# Windows Command Prompt
+set NEWS_API_KEY=your_actual_key_here
+
+# macOS / Linux
+export NEWS_API_KEY=your_actual_key_here
 ```
 
 ---
 
-## ℹ️ About the Project
+## Running the Pipeline
 
-Developed as a comprehensive solution for financial market surveillance, this tool helps investors and analysts quickly grasp market sentiment and trends across various sectors using data-driven insights.
+Run these scripts in order from the project root:
+
+```bash
+python src/sector_classification.py
+python src/sentiment_analysis.py
+python src/aggregation.py
+python src/visualisation/dashboard.py
+```
+
+Then launch the app:
+
+```bash
+streamlit run app/app.py
+```
+
+---
+
+## Technologies Used
+
+- Python, Pandas, NumPy
+- NLTK, spaCy, VADER Sentiment
+- scikit-learn, joblib
+- Matplotlib, Seaborn
+- Streamlit, Pillow
+- NewsAPI, feedparser, requests
+
+---
+
+## Notes
+
+- The historical dataset used in the project is a filtered financial subset of the larger raw news corpus.
+- The sector classifier is trained on the main sectors after excluding the `Others` class from training.
+- Live analysis uses the saved model and vectorizer for real-time inference.
+
+---
+
+## About the Project
+
+This project was developed as a practical financial text analytics system to help users understand sector-wise news flow, market sentiment, and trend signals through machine learning, NLP, and interactive dashboards.

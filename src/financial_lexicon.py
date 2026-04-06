@@ -8,7 +8,7 @@ The `adjust_sentiment()` function layers financial keyword awareness
 on top of a base VADER compound score to correct common misclassifications
 in financial text.
 
-Author: Financial News Analysis System
+Author: FinSight Engine
 """
 
 import re
